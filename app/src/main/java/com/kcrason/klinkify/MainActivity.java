@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView textView = (TextView) findViewById(R.id.txt_content);
-        TextLinkifyUtil.setLinkifyTextContent("#高考内点事儿#祝考生们考出好成绩 @考生"+"\u200B,加油!!!www.zheblog.com", TextLinkifyUtil.TextLinkifyStatus.ALL);
+        textView.setText(TextLinkifyUtil.setLinkifyTextContent(textView, "#hhhh#我的青春我做主 @KCrason" + "\u200B,http://www.github.com/KCrason", TextLinkifyUtil.TextLinkifyStatus.ALL));
     }
 }

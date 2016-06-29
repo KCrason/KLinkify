@@ -4,6 +4,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.widget.TextView;
 
 import java.util.regex.Pattern;
 
@@ -17,7 +18,8 @@ public class TextLinkifyUtil {
         LINK, ALL
     }
 
-    public static SpannableString setLinkifyTextContent(String content, TextLinkifyStatus status) {
+    public static SpannableString setLinkifyTextContent(TextView textView,String content, TextLinkifyStatus status) {
+        textView.setMovementMethod(new LinkTouchMovementMethod());
         SpannableString spannableString = SpannableString.valueOf(content);
         switch (status) {
             case LINK:
@@ -38,7 +40,7 @@ public class TextLinkifyUtil {
         for (URLSpan urlSpan : urlSpans) {
             int start = spannableString.getSpanStart(urlSpan);
             int end = spannableString.getSpanEnd(urlSpan);
-            textClickSpan = new TextClickSpan(urlSpan.getURL(), Constants.BLUE);
+            textClickSpan = new TextClickSpan(Constants.BLUE,urlSpan.getURL());
             spannableString.removeSpan(urlSpan);
             spannableString.setSpan(textClickSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

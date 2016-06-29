@@ -18,6 +18,6 @@ public class Constants {
 
     public static final String SCHEME_AT = "com.kcrason.at//";
 
-    public static final String BLUE = "#fdsfaa";
+    public static final String BLUE = "#ff0000";
 
 }
