@@ -1,6 +1,6 @@
 package com.kcrason.klinkify;
 
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -15,37 +15,79 @@ import java.util.regex.Pattern;
 public class TextLinkifyUtil {
 
     public enum TextLinkifyStatus {
-        LINK, ALL
+        LINK, TOPIC, AT, ALL
     }
 
-    public static SpannableString setLinkifyTextContent(TextView textView,String content, TextLinkifyStatus status) {
+    public static SpannableStringBuilder setLinkifyTextContent(TextView textView, String content, TextLinkifyStatus status) {
         textView.setMovementMethod(new LinkTouchMovementMethod());
-        SpannableString spannableString = SpannableString.valueOf(content);
+        SpannableStringBuilder spannableStringBuilder = SpannableStringBuilder.valueOf(content);
         switch (status) {
-            case LINK:
-                Linkify.addLinks(spannableString, patternCompile(Constants.URL_REGEX), Constants.SCHEME_URL);
+            case LINK: {
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.URL_REGEX), Constants.SCHEME_URL);
                 break;
-            case ALL:
-                Linkify.addLinks(spannableString, patternCompile(Constants.URL_REGEX), Constants.SCHEME_URL);
-                Linkify.addLinks(spannableString, patternCompile(Constants.TOPIC_REGEX), Constants.SCHEME_TOPIC);
-                Linkify.addLinks(spannableString, patternCompile(Constants.AT_REGEX), Constants.SCHEME_AT);
+            }
+            case TOPIC: {
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.TOPIC_REGEX), Constants.SCHEME_TOPIC);
                 break;
+            }
+            case AT: {
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.AT_REGEX), Constants.SCHEME_AT);
+                break;
+            }
+            case ALL: {
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.URL_REGEX), Constants.SCHEME_URL);
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.TOPIC_REGEX), Constants.SCHEME_TOPIC);
+                Linkify.addLinks(spannableStringBuilder, patternCompile(Constants.AT_REGEX), Constants.SCHEME_AT);
+                break;
+            }
         }
 
         //得到所有的span
-        URLSpan[] urlSpans = spannableString.getSpans(0, spannableString.length(), URLSpan.class);
+        URLSpan[] urlSpans = spannableStringBuilder.getSpans(0, spannableStringBuilder.length(), URLSpan.class);
 
         TextClickSpan textClickSpan;
+        String spanStr;
 
         for (URLSpan urlSpan : urlSpans) {
-            int start = spannableString.getSpanStart(urlSpan);
-            int end = spannableString.getSpanEnd(urlSpan);
-            textClickSpan = new TextClickSpan(Constants.BLUE,urlSpan.getURL());
-            spannableString.removeSpan(urlSpan);
-            spannableString.setSpan(textClickSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            int start = spannableStringBuilder.getSpanStart(urlSpan);
+            int end = spannableStringBuilder.getSpanEnd(urlSpan);
+            spanStr = urlSpan.getURL();
+            textClickSpan = new TextClickSpan(Constants.BLUE, spanStr);
+            spannableStringBuilder.removeSpan(urlSpan);
+            spannableStringBuilder.setSpan(textClickSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableReplace(spannableStringBuilder, start, end, spanStr);
         }
+        return spannableStringBuilder;
+    }
 
-        return spannableString;
+    private static TextLinkifyStatus getStatus(String spanStr) {
+        if (spanStr.startsWith(Constants.SCHEME_URL)) {
+            return TextLinkifyStatus.LINK;
+        } else if (spanStr.startsWith(Constants.SCHEME_TOPIC)) {
+            return TextLinkifyStatus.TOPIC;
+        } else if (spanStr.startsWith(Constants.SCHEME_AT)) {
+            return TextLinkifyStatus.AT;
+        } else {
+            return null;
+        }
+    }
+
+    private static void spannableReplace(SpannableStringBuilder spannableStringBuilder, int start, int end, String spanStr) {
+        TextLinkifyStatus status = getStatus(spanStr);
+        switch (status) {
+            case LINK: {
+                spannableStringBuilder.replace(start, end, "this is link");
+                break;
+            }
+            case TOPIC: {
+                spannableStringBuilder.replace(start, end, "this is a topic");
+                break;
+            }
+            case AT: {
+                spannableStringBuilder.replace(start, end, "this is at");
+                break;
+            }
+        }
     }
 
     public static Pattern patternCompile(String pattern) {
