@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         SpannableStringBuilder spannableStringBuilder = TextLinkifyUtil
-                .setLinkifyTextContent(textView.getTextView(), mContent, TextLinkifyUtil.TextLinkifyStatus.ALL);
+                .setAllLinkifyTextContent(textView.getTextView(), mContent);
         textView.setText(spannableStringBuilder);
     }
 }

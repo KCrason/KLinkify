@@ -22,17 +22,21 @@ public class TextLinkifyUtil {
         LINK, TOPIC, AT, ALL
     }
 
-    public static SpannableStringBuilder setLinkifyTextContent(final TextView textView, String content, TextLinkifyStatus status) {
-        textView.setOnTouchListener(new TextOnTouchMovementMethod());
-
+    public static SpannableStringBuilder setAllLinkifyTextContent(TextView textView, String content) {
         /**
          * 注意：此处为什么不使用LinkTouchMovementMethod()：
          * 当在ExpandableTextViw中使用需要匹配的字串时，如果setMovementMothod()方法，
          * 那么会到值TextView的自由滑动，严重影响用户体验，因此，设置TextView的setOnTouchListener()方法
-         * 可以避免这一问题
+         * 可以避免这一问题,如果没有设置TextView的maxLine属性，可以使用textView.setMovementMethod(new LinkTouchMovementMethod())
          */
-
         // textView.setMovementMethod(new LinkTouchMovementMethod());
+        textView.setOnTouchListener(new TextOnTouchMovementMethod());
+        return getLinkifyTextContent(textView, content, TextLinkifyStatus.ALL);
+    }
+
+    public static SpannableStringBuilder getLinkifyTextContent(final TextView textView, String content, TextLinkifyStatus status) {
+
+
         SpannableStringBuilder spannableStringBuilder = SpannableStringBuilder.valueOf(content);
         switch (status) {
             case LINK: {
@@ -87,6 +91,13 @@ public class TextLinkifyUtil {
         }
     }
 
+    /**
+     * 将匹配到的Span替换成自己的任意内容
+     * @param spannableStringBuilder
+     * @param start
+     * @param end
+     * @param spanStr
+     */
     private static void spannableReplace(SpannableStringBuilder spannableStringBuilder, int start, int end, String spanStr) {
         TextLinkifyStatus status = getStatus(spanStr);
         switch (status) {

@@ -28,7 +28,7 @@ public class TextOnTouchMovementMethod implements View.OnTouchListener {
                 mStartTime = System.currentTimeMillis();
                 mPressedClickSpan = getTextClickSpan(widget, spannable, event);
                 if (mPressedClickSpan != null) {
-                    BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(0xFFE1E1EE);
+                    BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(0xFF00ff00);
                     spannableString.setSpan(backgroundColorSpan, spannable.getSpanStart(mPressedClickSpan),
                             spannable.getSpanEnd(mPressedClickSpan), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     widget.setText(spannableString);
