@@ -1,4 +1,4 @@
-package com.kcrason.klinkify;
+package com.kcrason.klinkify.common;
 
 /**
  * @author Created by KCrason on 2016/6/28.

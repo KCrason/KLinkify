@@ -7,6 +7,8 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kcrason.klinkify.common.Constants;
+
 /**
  * @author Created by KCrason on 2016/6/28.
  * @email 535089696@qq.com
@@ -30,7 +32,7 @@ public class TextClickSpan extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint ds) {
         //更改背景色颜色
-        ds.bgColor = mPressed ? Color.parseColor("#12ff00ff") : Color.parseColor("#1200ffff");
+        ds.bgColor = mPressed ? Color.parseColor("#ffff00") : Color.TRANSPARENT;
         //设置文字颜色
         ds.setColor(Color.parseColor("#ff0000"));
         //设置下划线为false,即不需要下划线
